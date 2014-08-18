@@ -44,6 +44,7 @@ var Slides = prime({
 			navSelector: options.navSelector,
 			interval: !isNaN(interval) ? interval : 3000,
 			loop: options.loop === false ? false : true,
+			hover: options.hover === true,
 			transition: transition,
 			transitionOptions: options.transitionOptions || {duration: 150}
 		};
@@ -75,7 +76,7 @@ var Slides = prime({
 	 */
 	setEvents: function(){
 		var self = this;
-		this.navEls.on('click', function(e){
+		this.navEls.on((this.options.hover ? 'mouseenter' : 'click'), function(e){
 			e.preventDefault();
 			var el = $(e.srcElement || e.target);
 			self.to(parseInt(el.attribute('data-index'), 10));
