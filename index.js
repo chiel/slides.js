@@ -20,8 +20,12 @@ var Slides = prime({
 		this.setEvents();
 
 		this.current = 0;
-		$(this.navEls[this.current]).addClass('active');
 		this.emit('change', this.current, null, null);
+
+		if (this.navEls){
+			$(this.navEls[this.current]).addClass('active');
+		}
+
 		this.loop();
 	},
 
@@ -67,7 +71,10 @@ var Slides = prime({
 			if (i > 0){
 				this.slides[i].hide(true);
 			}
-			$(this.navEls[i]).attribute('data-index', i);
+
+			if (this.navEls){
+				$(this.navEls[i]).attribute('data-index', i);
+			}
 		}
 	},
 
@@ -75,6 +82,7 @@ var Slides = prime({
 	 *
 	 */
 	setEvents: function(){
+		if (!this.navEls) return;
 		var self = this;
 		this.navEls.on((this.options.hover ? 'mouseenter' : 'click'), function(e){
 			e.preventDefault();
@@ -128,8 +136,10 @@ var Slides = prime({
 
 		var direction = this.current < index ? '+' : '-';
 
-		$(this.navEls[this.current]).removeClass('active');
-		$(this.navEls[index]).addClass('active');
+		if (this.navEls){
+			$(this.navEls[this.current]).removeClass('active');
+			$(this.navEls[index]).addClass('active');
+		}
 
 		this.slides[this.current].hide(false, direction);
 		this.slides[index].show(false, direction);
