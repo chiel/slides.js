@@ -6,8 +6,9 @@ require('moofx');
 /**
  *
  */
-var Slide = function(el){
+var Slide = function(el, options){
 	this.el = $(el);
+	this.options = options || {duration: 250};
 };
 
 /**
@@ -20,9 +21,12 @@ Slide.prototype.hide = function(instant){
 	}
 
 	var self = this;
-	this.el.style({zIndex: 3}).animate({opacity: 0}, {duration: 250, callback: function(){
-		self.el.style({zIndex: 1});
-	}});
+	this.el.style({zIndex: 3}).animate({opacity: 0}, {
+		duration: this.options.duration,
+		callback: function(){
+			self.el.style({zIndex: 1});
+		}
+	});
 };
 
 /**

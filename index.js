@@ -50,7 +50,7 @@ var Slides = prime({
 			loop: options.loop === false ? false : true,
 			hover: options.hover === true,
 			transition: transition,
-			transitionOptions: options.transitionOptions || {duration: 150}
+			transitionOptions: options.transitionOptions
 		};
 	},
 
