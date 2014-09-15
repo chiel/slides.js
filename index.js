@@ -68,7 +68,7 @@ var Slides = prime({
 			this.slides[i].hide(true, i < this.options.initial ? '+' : '-');
 		}
 
-		this.to(this.options.initial, true);
+		this.to(this.options.initial, true, true);
 	},
 
 	/**
@@ -110,7 +110,7 @@ var Slides = prime({
 	 * Go to a slide by index
 	 * @param {Number} index
 	 */
-	to: function(index, instant){
+	to: function(index, instant, suppress){
 		index = parseInt(index, 10);
 		if (!this.slides[index] || index == this.active) return;
 
@@ -142,7 +142,10 @@ var Slides = prime({
 			this.slides[i].show(instant, direction, pos++, i == index);
 		}
 
-		this.emit('change', index, this.active, direction);
+		if (!suppress){
+			this.emit('change', index, this.active, direction);
+		}
+
 		this.active = index;
 		this.shown = shown;
 
