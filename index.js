@@ -139,7 +139,7 @@ var Slides = prime({
 
 		for (i = first; i < last; i++){
 			shown.push(i);
-			this.slides[i].show(instant, direction, pos++);
+			this.slides[i].show(instant, direction, pos++, i == index);
 		}
 
 		this.emit('change', index, this.active, direction);

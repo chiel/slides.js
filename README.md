@@ -120,3 +120,4 @@ methods that can be called:
     direction your transition needs to go
   - `position` - this indicates which position the slide should take, in the
     case of displaying multiple slides at once
+  - `isActive` - whether this is the actual active slide
