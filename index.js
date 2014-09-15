@@ -2,6 +2,8 @@
 
 var $ = require('elements'),
 	prime = require('prime'),
+	bind = require('mout/function/bind'),
+	forEach = require('mout/array/forEach'),
 	isFunction = require('mout/lang/isFunction');
 
 var transitions = require('./transitions');
@@ -17,15 +19,6 @@ var Slides = prime({
 		this.el = $(el);
 		this.parseOptions(options);
 		this.cacheElements();
-		this.setEvents();
-
-		this.current = 0;
-		this.emit('change', this.current, null, null);
-
-		if (this.navEls){
-			$(this.navEls[this.current]).addClass('active');
-		}
-
 		this.loop();
 	},
 
@@ -44,11 +37,12 @@ var Slides = prime({
 		}
 
 		this.options = {
-			slideSelector: options.slideSelector || '.slide',
-			navSelector: options.navSelector,
+			selector: options.selector || '.slide',
+			initial: options.initial || 0,
+			shown: options.shown || 1,
+			selected: options.selected || 0,
+			loop: options.loop === true,
 			interval: !isNaN(interval) ? interval : 3000,
-			loop: options.loop === false ? false : true,
-			hover: options.hover === true,
 			transition: transition,
 			transitionOptions: options.transitionOptions
 		};
@@ -59,36 +53,22 @@ var Slides = prime({
 	 */
 	cacheElements: function(){
 		this.slides = [];
-		this.navEls = this.el.search(this.options.navSelector);
-		var slides = this.el.search(this.options.slideSelector),
+
+		var slides = this.el.search(this.options.selector),
 			i, len = slides.length;
 
 		for (i = 0; i < len; i++){
-			this.slides.push(new this.options.transition(
-				slides[i],
-				this.options.transitionOptions
-			));
-			if (i > 0){
-				this.slides[i].hide(true);
-			}
+			this.slides.push(new this.options.transition({
+				element: slides[i],
+				parent: this.el[0],
+				shown: this.options.shown,
+				options: this.options.transitionOptions
+			}));
 
-			if (this.navEls){
-				$(this.navEls[i]).attribute('data-index', i);
-			}
+			this.slides[i].hide(true, i < this.options.initial ? '+' : '-');
 		}
-	},
 
-	/**
-	 *
-	 */
-	setEvents: function(){
-		if (!this.navEls) return;
-		var self = this;
-		this.navEls.on((this.options.hover ? 'mouseenter' : 'click'), function(e){
-			e.preventDefault();
-			var el = $(e.srcElement || e.target);
-			self.to(parseInt(el.attribute('data-index'), 10));
-		});
+		this.to(this.options.initial, true);
 	},
 
 	/**
@@ -108,7 +88,7 @@ var Slides = prime({
 	 * Go to the previous slide
 	 */
 	previous: function(){
-		var index = this.current - 1;
+		var index = this.active - 1;
 		if (index < 0){
 			index = this.slides.length - 1;
 		}
@@ -119,7 +99,7 @@ var Slides = prime({
 	 * Go to the next slide
 	 */
 	next: function(){
-		var index = this.current + 1;
+		var index = this.active + 1;
 		if (index > this.slides.length - 1){
 			index = 0;
 		}
@@ -130,21 +110,41 @@ var Slides = prime({
 	 * Go to a slide by index
 	 * @param {Number} index
 	 */
-	to: function(index){
+	to: function(index, instant){
 		index = parseInt(index, 10);
-		if (isNaN(index) || index == this.current || !this.slides[index]) return;
+		if (!this.slides[index] || index == this.active) return;
 
-		var direction = this.current < index ? '+' : '-';
+		var first = (index - this.options.selected) + 1,
+			last = first + this.options.shown, i, shown = [], direction, pos = 0;
 
-		if (this.navEls){
-			$(this.navEls[this.current]).removeClass('active');
-			$(this.navEls[index]).addClass('active');
+		if (first < 0){
+			first = 0;
+			last = this.options.shown;
 		}
 
-		this.slides[this.current].hide(false, direction);
-		this.slides[index].show(false, direction);
-		this.emit('change', index, this.current, direction);
-		this.current = index;
+		if (last > this.slides.length){
+			first = this.slides.length - this.options.shown;
+			last = this.slides.length;
+		}
+
+		direction = this.active < index ? '+' : '-';
+
+		if (this.shown){
+			forEach(this.shown, bind(function(i){
+				if (i < first || i >= last){
+					this.slides[i].hide(instant, direction);
+				}
+			}, this));
+		}
+
+		for (i = first; i < last; i++){
+			shown.push(i);
+			this.slides[i].show(instant, direction, pos++);
+		}
+
+		this.emit('change', index, this.active, direction);
+		this.active = index;
+		this.shown = shown;
 
 		this.loop();
 	}

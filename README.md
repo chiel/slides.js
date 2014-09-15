@@ -18,6 +18,9 @@ $ npm install --save slides-js
 
 In the future, slides.js will be available from bower as well.
 
+[browserify]: http://browserify.org/
+[wrapup]: https://github.com/mootools/wrapup
+
 
 ## Usage
 
@@ -38,16 +41,17 @@ methods on the slides instance - these will be detailed below.
 The constructor takes an `options` object as its second argument. Below is a
 description of each option, along with the defaults.
 
-- `slideSelector` - selector to use to find slides, defaults to `'.slide'`
-- `navSelector` - selector to use to find nav elements, defaults to `undefined`
+- `selector` - selector to use to find slides, defaults to `'.slide'`
+- `initial` - slide to show initial, defaults to `0`
+- `shown` - amount of slides to display simultaneously, defaults to `1`
+- `selected` - which slide, out of the ones displayed, to mark as `active`,
+  defaults to `0`
+- `loop` - whether the slideshow automatically loops, defaults to `false`
 - `interval` - time (in milliseconds) to wait between each slide transition
-- `loop` - whether the slideshow automatically loops, defaults to `true`
-- `hover` - whether slides should be shown on nav hover rather than click,
-  defaults to `false`
 - `transition` - which transition to use, defaults to `'fade'`, custom
-  transitions can be used too, how to do this is detailed below
+  transitions can be used too (detailed below)
 - `transitionOptions` - options passed directly to the transition instance,
-  defaults to `{duration: 150}`
+  defaults depend on the transition
 
 
 ## Instance methods
@@ -64,17 +68,17 @@ Once your slides.js instance has been created, a few methods can be called:
 
 ## Custom transitions
 
-It is possible to create custom transitions if you wish, you can do this by
-passing a transition function to the `transition` option. For example:
+It is possible to create custom transitions, you can do this by passing a
+transition function to the `transition` option. For example:
 
 ```js
-var Slide = function(element, options){
-  this.element = element;
+var Slide = function(params){
+  this.element = params.element;
 
   // since the options get passed through directly
   // from the main instance you can use whatever
   // options suit your transition
-  this.options = options;
+  this.options = params.options;
 };
 
 Slide.prototype.hide = function(instant, direction){
@@ -96,13 +100,23 @@ hiding without a transition. As you can see, a transition instance should have 3
 methods that can be called:
 
 - `constructor` - the transition objects are always called with `new`
-  - `element` - the slide element, this is regular DOM element
-  - `options` - the options for the transition, passed directly from the Slides
-    options object
+  - `params` - parameters object, contains the following keys:
+    - `element` - the slide element, this is regular DOM element
+    - `parent` - the wrapper element, this is a regular DOM element
+    - `shown` - amount of slides being displayed simultaneously
+    - `options` - the options for the transition, passed directly from the Slides
+      options object
 - `hide` - hide the slide
   - `instant` - whether or not the transition should be instant, this is useful
     for initial pageload when the slides get loaded for the very first time.
     Usually you don't want to show a transition right on pageload.
   - `direction` - this is either `+` or `-` and can help you determine which
     direction your transition needs to go
-- `show` - show the slide, this function receives the same arguments as `hide`
+- `show` - show the slide
+  - `instant` - whether or not the transition should be instant, this is useful
+    for initial pageload when the slides get loaded for the very first time.
+    Usually you don't want to show a transition right on pageload.
+  - `direction` - this is either `+` or `-` and can help you determine which
+    direction your transition needs to go
+  - `position` - this indicates which position the slide should take, in the
+    case of displaying multiple slides at once

@@ -3,17 +3,11 @@
 var $ = require('elements');
 require('moofx');
 
-/**
- *
- */
-var Slide = function(el, options){
-	this.el = $(el);
-	this.options = options || {duration: 250};
+var Slide = function(params){
+	this.el = $(params.element);
+	this.options = params.options || {duration: 250};
 };
 
-/**
- * @param {Bool} instant
- */
 Slide.prototype.hide = function(instant){
 	if (instant){
 		this.el.style({display: 'none'});
@@ -29,9 +23,6 @@ Slide.prototype.hide = function(instant){
 	});
 };
 
-/**
- *
- */
 Slide.prototype.show = function(){
 	this.el.style({
 		display: 'block',
