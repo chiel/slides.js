@@ -40,7 +40,7 @@ var Slides = prime({
 			selector: options.selector || '.slide',
 			initial: options.initial || 0,
 			shown: options.shown || 1,
-			selected: options.selected || 0,
+			selected: options.selected || 1,
 			loop: options.loop === true,
 			interval: !isNaN(interval) ? interval : 3000,
 			transition: transition,
@@ -69,6 +69,24 @@ var Slides = prime({
 		}
 
 		this.to(this.options.initial, true, true);
+	},
+
+	/**
+	 *
+	 */
+	setOptions: function(options){
+		console.log('set options');
+
+		this.options.shown = options.shown || 1;
+		this.options.selected = options.selected || 1;
+
+		for (var i = 0; i < this.slides.length; i++){
+			if (this.slides[i].setShown){
+				this.slides[i].setShown(this.options.shown);
+			}
+		}
+
+		this.to(this.active || this.options.initial, true);
 	},
 
 	/**
@@ -112,10 +130,11 @@ var Slides = prime({
 	 */
 	to: function(index, instant, suppress){
 		index = parseInt(index, 10);
-		if (!this.slides[index] || index == this.active) return;
+		if (!this.slides[index] || (index == this.active && !instant)) return;
 
 		var first = (index - this.options.selected) + 1,
-			last = first + this.options.shown, i, shown = [], direction, pos = 0;
+			last = first + this.options.shown,
+			i, shown = [], direction, pos = 0;
 
 		if (first < 0){
 			first = 0;
