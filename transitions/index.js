@@ -1,5 +1,5 @@
 'use strict';
 
 module.exports = {
-	fade: require('./fade')
+	css3: require('./css3')
 };

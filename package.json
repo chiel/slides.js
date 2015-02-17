@@ -1,16 +1,14 @@
 {
-	"name": "slides-js",
-	"version": "0.2.3",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/chielkunkels/slides.js.git"
-	},
-	"author": "Chiel Kunkels <chiel@kunkels.me>",
-	"main": "index.js",
-	"dependencies": {
-		"elements": "0.4",
-		"moofx": "kamicane/moofx#a3716037e78f057e6eb06504c4192abb56edb4c0",
-		"mout": "0.9",
-		"prime": "0.4"
-	}
+  "name": "slides-js",
+  "version": "0.3.0",
+  "author": "chielkunkels",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chielkunkels/slides.js.git"
+  },
+  "dependencies": {
+    "inherits": "^2.0.1",
+    "mout": "^0.11.0"
+  }
 }

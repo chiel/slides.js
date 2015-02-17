@@ -1,22 +1,20 @@
 # slides.js
 
-slides.js is a small, modular library which helps you to create
+`slides.js` is a small, modular library which helps you to create
 slideshow/carousel-like implementations.
 
-*Please note that this is a pre-1.0 release and as such the API should be
-considered unstable at this point.*
+**Note: this is a pre-1.0 release and as such the API should be considered
+unstable at this point.**
 
 ## Installation
 
 Currently, slides.js is only available from npm. You can use a tool such as
-[browserify][browserify] or [wrapup][wrapup] in your build process to make it
-available in the browser.
+[browserify][browserify] in your build process to make it available in the
+browser.
 
 ```bash
 $ npm install --save slides-js
 ```
-
-In the future, slides.js will be available from bower as well.
 
 [browserify]: http://browserify.org/
 [wrapup]: https://github.com/mootools/wrapup
@@ -24,11 +22,11 @@ In the future, slides.js will be available from bower as well.
 
 ## Usage
 
-The simplest instantiation of slides.js would look a little like this:
+The simplest instantiation of `slides.js` would look a little like this:
 
 ```js
-var Slides = require('slides-js');
-var slides = new Slides(document.querySelector('.slides'));
+var Slides = require('slides-js'),
+    slides = new Slides(document.querySelector('.slides'));
 ```
 
 This will look for elements with the `.slide` selector inside the passed element
@@ -41,14 +39,14 @@ methods on the slides instance - these will be detailed below.
 The constructor takes an `options` object as its second argument. Below is a
 description of each option, along with the defaults.
 
-- `selector` - selector to use to find slides, defaults to `'.slide'`
-- `initial` - slide to show initial, defaults to `0`
+- `selector` - selector to use to find slides, defaults to `.slide`
+- `initial` - slide to show initially, defaults to `0`
 - `shown` - amount of slides to display simultaneously, defaults to `1`
 - `selected` - which slide, out of the ones displayed, to mark as `active`,
   defaults to `0`
 - `loop` - whether the slideshow automatically loops, defaults to `false`
-- `interval` - time (in milliseconds) to wait between each slide transition
-- `transition` - which transition to use, defaults to `'fade'`, custom
+- `interval` - time (in ms) to wait between each slide transition
+- `transition` - which transition to use, defaults to `css3`. Custom
   transitions can be used too (detailed below)
 - `transitionOptions` - options passed directly to the transition instance,
   defaults depend on the transition
@@ -56,7 +54,7 @@ description of each option, along with the defaults.
 
 ## Instance methods
 
-Once your slides.js instance has been created, a few methods can be called:
+Once your `slides.js` instance has been created, a few methods can be called:
 
 - `next` - transition to the next slide, this will automatically loop around
   back to the beginning once the end is reached
