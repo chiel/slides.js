@@ -97,7 +97,9 @@ Slides.prototype.loop = function(){
 	var self = this;
 	clearTimeout(this.timeout);
 	this.timeout = setTimeout(function(){
-		self.next();
+		requestAnimationFrame(function(){
+			self.next();
+		});
 	}, this.options.interval);
 };
 
